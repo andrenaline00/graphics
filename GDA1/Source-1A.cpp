@@ -2,8 +2,8 @@
 //Αυτό το αρχείο θα το χρησιμοποιήσετε
 // για να υλοποιήσετε την άσκηση 1Α της OpenGL
 //
-//ΑΜ:                         Όνομα:
-//ΑΜ:                         Όνομα:
+//ΑΜ: 5309                        Όνομα: Andreana Nikou
+//ΑΜ: 5379                        Όνομα: Theodora Ferentinou
 
 //*********************************
 
@@ -147,7 +147,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(750, 750, "Project 1A template", NULL, NULL);
+	window = glfwCreateWindow(900, 900, u8"Εργασία 1Α - 5309 - 5379", NULL, NULL);
 
 
 	if (window == NULL) {
@@ -167,11 +167,18 @@ int main(void)
 		return -1;
 	}
 
+
+	//state variables for moving the shape
+	float xPos = 0.0f;
+	float yPos = 0.0f;
+
+
+
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	// blue background
-	glClearColor(0.0f, 0.0f,1.02f, 0.0f);
+	// dark gray background
+	glClearColor(34.0f/255.0f,34.0f/255.0f,34.0f/255.0f, 0.0f);
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -209,15 +216,20 @@ int main(void)
 	
 	//example shape
 	GLfloat shape[] = {
-		//first triangle
-		-2.0f, 2.0f, 0.0f,
-		 2.0f, 2.0f, 0.0f,
-		 2.0f, -2.0f, 0.0f,
+		//first triangle PANW
+		-1.5f, 0.0f, 0.0f,
+		 1.5f, 0.0f, 0.0f,
+		 0.0f, 0.75f, 0.0f,
 
 		 //second triangle
-		-2.0f, 2.0f, 0.0f,
-		 2.0f, -2.0f, 0.0f,
-		 -2.0f, -2.0f, 0.0f
+		-1.5f, 0.0f, 0.0f,
+		 -1.5f, -1.0f, 0.0f,
+		 1.5f, 0.0f, 0.0f,
+
+		 //third triangle
+		 1.5f, 0.0f, 0.0f,
+		 1.5f, -1.0f, 0.0f,
+		 -1.5f, -1.0f, 0.0f
 	};
 
 	GLuint vbuffer;
@@ -251,7 +263,7 @@ int main(void)
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 3*2); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
+		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
 
 		
 		glDisableVertexAttribArray(0);
@@ -260,8 +272,34 @@ int main(void)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+
+		//moving the shape with keys J and L
+		//while (xPos >= -2.0f && xPos <= 2.0f) { // left boundary check
+			
+		//}
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+			xPos += 0.1f;
+			//while (xPos < 2.0f) { // boundary check
+				for (int i = 0; i < sizeof(shape) / sizeof(shape[0]); i += 3) {
+					shape[i] += 0.01f; // move x coordinate
+				}
+			}
+		
+
+		else if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+			xPos -= 0.1f;
+			for (int i = 0; i < sizeof(shape) / sizeof(shape[0]); i += 3) {
+				shape[i] -= 0.01f; // move x coordinate
+			}
+		}
+
+
+
 	} 
-	while (glfwGetKey(window, GLFW_KEY_Q) != GLFW_PRESS &&  glfwWindowShouldClose(window) == 0);
+	while (glfwGetKey(window, GLFW_KEY_1) != GLFW_PRESS &&  glfwWindowShouldClose(window) == 0);
+
+
+
 
 	// Cleanup VBO
 	glDeleteBuffers(1, &vbuffer);
