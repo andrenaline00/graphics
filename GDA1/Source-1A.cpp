@@ -147,7 +147,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Open a window and create its OpenGL context
-	window = glfwCreateWindow(900, 900, "Εργασία 1Α - 5379 - ανδρεανα", NULL, NULL);
+	window = glfwCreateWindow(750, 750, "Project 1A template", NULL, NULL);
 
 
 	if (window == NULL) {
