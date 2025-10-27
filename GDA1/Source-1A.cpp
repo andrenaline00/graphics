@@ -168,10 +168,14 @@ int main(void)
 	}
 
 
-	//state variables for moving the shape
-	float xPos = 0.0f;
-	float yPos = 0.0f;
-
+	//variables
+	float centerX = 0.0f;
+	float centerY = 0.0f;
+	const float shapeWidth = 3.0f; //from -1.5 to 1.5
+	//const float leftBoundary = -15.0f + shapeSize / 2.0f; // -13.5
+	//const float rightBoundary = 15.0f - shapeSize / 2.0f; // 13.5
+	const float leftBoundary = -12.50f;
+	const float rightBoundary = 12.50f;
 
 
 	// Ensure we can capture the escape key being pressed below
@@ -216,21 +220,65 @@ int main(void)
 	
 	//example shape
 	GLfloat shape[] = {
-		//first triangle PANW
+		//first triangle (top)
 		-1.5f, 0.0f, 0.0f,
 		 1.5f, 0.0f, 0.0f,
 		 0.0f, 0.75f, 0.0f,
 
-		 //second triangle
+		 //second triangle (bottom left)
 		-1.5f, 0.0f, 0.0f,
 		 -1.5f, -1.0f, 0.0f,
 		 1.5f, 0.0f, 0.0f,
 
-		 //third triangle
+		 //third triangle (bottom right)
 		 1.5f, 0.0f, 0.0f,
 		 1.5f, -1.0f, 0.0f,
 		 -1.5f, -1.0f, 0.0f
 	};
+
+
+
+	/*
+	GLfloat squareShape[] = {
+		//first triangle 
+		1.5f , 0.0f , 0.0f,
+		-1.5f , 0.0f , 0.0f ,
+		-1.5f , 1.5f , 0.0f,
+
+		//second triangle
+		1.5f , 0.0f , 0.0f,
+		-1.5f , 1.5f , 0.0f,
+		1.5f , 1.5f , 0.0f
+	};
+
+
+	GLfloat starShape[] = {
+		//first triangle 
+		0.0f , 1.5f , 0.0f,
+		-0.5f , 0.0f , 0.0f ,
+		0.5f , 0.0f , 0.0f,
+		//second triangle
+		0.0f , -1.5f , 0.0f,
+		-0.5f , 0.0f , 0.0f ,
+		0.5f , 0.0f , 0.0f,
+		//third triangle
+		1.5f , 0.0f , 0.0f,
+		0.0f , -0.5f , 0.0f ,
+		0.0f , 0.5f , 0.0f,
+		//fourth triangle
+		-1.5f , 0.0f , 0.0f,
+		0.0f , -0.5f , 0.0f ,
+		0.0f , 0.5f , 0.0f
+	};
+
+	*/
+
+	//gotta make VBO and VA0 for star shape 
+
+
+
+
+
 
 	GLuint vbuffer;
 	glGenBuffers(1, &vbuffer);
@@ -274,24 +322,22 @@ int main(void)
 
 
 		//moving the shape with keys J and L
-		//while (xPos >= -2.0f && xPos <= 2.0f) { // left boundary check
-			
-		//}
+		//do not get out of window ,left  and right boundary check
 		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-			xPos += 0.1f;
-			//while (xPos < 2.0f) { // boundary check
+			if (shape[3] < rightBoundary && shape[6] < rightBoundary && shape[9] < rightBoundary) { // boundary check for right side
 				for (int i = 0; i < sizeof(shape) / sizeof(shape[0]); i += 3) {
 					shape[i] += 0.01f; // move x coordinate
 				}
 			}
-		
-
+		}
 		else if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-			xPos -= 0.1f;
-			for (int i = 0; i < sizeof(shape) / sizeof(shape[0]); i += 3) {
-				shape[i] -= 0.01f; // move x coordinate
+			if (shape[0] > leftBoundary && shape[12] > leftBoundary && shape[15] > leftBoundary) { // boundary check for left side
+				for (int i = 0; i < sizeof(shape) / sizeof(shape[0]); i += 3) {
+					shape[i] -= 0.01f; // move x coordinate
+				}
 			}
 		}
+			
 
 
 
