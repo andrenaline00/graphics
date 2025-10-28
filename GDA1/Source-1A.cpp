@@ -238,52 +238,60 @@ int main(void)
 
 
 
-	/*
-	GLfloat squareShape[] = {
+	
+	GLfloat starShape[] = {
+		//base
 		//first triangle 
-		1.5f , 0.0f , 0.0f,
-		-1.5f , 0.0f , 0.0f ,
-		-1.5f , 1.5f , 0.0f,
+		-0.25f , 0.0f , 0.0f,
+		0.25f , 0.0f , 0.0f ,
+		-0.25f , -0.5f , 0.0f,
 
 		//second triangle
-		1.5f , 0.0f , 0.0f,
-		-1.5f , 1.5f , 0.0f,
-		1.5f , 1.5f , 0.0f
-	};
+		
+		0.25f , 0.0f , 0.0f,
+		0.25f , -0.5f , 0.0f ,
+		-0.25f , -0.5f , 0.0f,
+	//};
 
 
-	GLfloat starShape[] = {
+	//GLfloat starShape[] = {
+		//rest
 		//first triangle 
 		0.0f , 1.5f , 0.0f,
-		-0.5f , 0.0f , 0.0f ,
-		0.5f , 0.0f , 0.0f,
+		-0.25f , 0.0f , 0.0f ,
+		0.25f , 0.0f , 0.0f,
 		//second triangle
-		0.0f , -1.5f , 0.0f,
-		-0.5f , 0.0f , 0.0f ,
-		0.5f , 0.0f , 0.0f,
+		-1.75f , -0.25f , 0.0f,
+		-0.25f , 0.0f , 0.0f ,
+		-0.25f , -0.5f , 0.0f,
 		//third triangle
-		1.5f , 0.0f , 0.0f,
-		0.0f , -0.5f , 0.0f ,
-		0.0f , 0.5f , 0.0f,
+		-0.25f , -0.5f , 0.0f,
+		0.0f , -2.0f , 0.0f ,
+		0.25f , -0.5f , 0.0f,
 		//fourth triangle
-		-1.5f , 0.0f , 0.0f,
-		0.0f , -0.5f , 0.0f ,
-		0.0f , 0.5f , 0.0f
+		0.25f , 0.0f , 0.0f,
+		0.25f , -0.5f , 0.0f ,
+		1.75f , -0.25f , 0.0f
 	};
 
-	*/
+
 
 	//gotta make VBO and VA0 for star shape 
+	//idk if its necessary
 
 
 
-
-
-
+	//VBO shape
 	GLuint vbuffer;
 	glGenBuffers(1, &vbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
+
+	//VBO star
+	GLuint vb;
+	glGenBuffers(1, &vb);
+	glBindBuffer(GL_ARRAY_BUFFER, vb);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
 
 	do {
 
@@ -298,8 +306,13 @@ int main(void)
 		glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
 
+		glGenBuffers(1, &vb);
+		glBindBuffer(GL_ARRAY_BUFFER, vb);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
+
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
+		glBindBuffer(GL_ARRAY_BUFFER, vb);
 		
 		glVertexAttribPointer(
 			0,                  // attribute 0, must match the layout in the shader.
@@ -311,7 +324,7 @@ int main(void)
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
+		glDrawArrays(GL_TRIANGLES, 0, 3*9); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
 
 		
 		glDisableVertexAttribArray(0);
