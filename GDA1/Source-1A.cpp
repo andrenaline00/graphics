@@ -218,22 +218,22 @@ int main(void)
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 	
-	//example shape
+	//character A
 	GLfloat shape[] = {
 		//first triangle (top)
-		-1.5f, 0.0f, 0.0f,
-		 1.5f, 0.0f, 0.0f,
-		 0.0f, 0.75f, 0.0f,
+		-1.5f, -8.0f, 0.0f,
+		 1.5f, -8.0f, 0.0f,
+		 0.0f, -7.25f, 0.0f,
 
 		 //second triangle (bottom left)
-		-1.5f, 0.0f, 0.0f,
-		 -1.5f, -1.0f, 0.0f,
-		 1.5f, 0.0f, 0.0f,
+		-1.5f, -8.0f, 0.0f,
+		-1.5f, -9.5f, 0.0f,
+		 1.5f, -8.0f, 0.0f,
 
 		 //third triangle (bottom right)
-		 1.5f, 0.0f, 0.0f,
-		 1.5f, -1.0f, 0.0f,
-		 -1.5f, -1.0f, 0.0f
+		 1.5f, -8.0f, 0.0f,
+		 1.5f, -9.5f, 0.0f,
+		-1.5f, -9.5f, 0.0f
 	};
 
 
@@ -324,13 +324,15 @@ int main(void)
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
 
+
+
 		glGenBuffers(1, &vbufferstar);
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 
-		glDisableVertexAttribArray(0);
+		//glDisableVertexAttribArray(0);
 
 		glVertexAttribPointer(
 			0,                  // attribute 0, must match the layout in the shader.
