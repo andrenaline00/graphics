@@ -277,7 +277,7 @@ int main(void)
 
 
 	//gotta make VBO and VA0 for star shape 
-	//idk if its necessary
+
 
 
 
@@ -288,9 +288,9 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
 
 	//VBO star
-	GLuint vb;
-	glGenBuffers(1, &vb);
-	glBindBuffer(GL_ARRAY_BUFFER, vb);
+	GLuint vbufferstar;
+	glGenBuffers(1, &vbufferstar);
+	glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
 
 	do {
@@ -306,13 +306,11 @@ int main(void)
 		glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
 
-		glGenBuffers(1, &vb);
-		glBindBuffer(GL_ARRAY_BUFFER, vb);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
+		
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, vb);
+		
 		
 		glVertexAttribPointer(
 			0,                  // attribute 0, must match the layout in the shader.
@@ -324,11 +322,30 @@ int main(void)
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 3*9); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
+		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
 
+		glGenBuffers(1, &vbufferstar);
+		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
+
+		glDisableVertexAttribArray(0);
+
+		glVertexAttribPointer(
+			0,                  // attribute 0, must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+
+		// Draw the triangle !
+		glDrawArrays(GL_TRIANGLES, 0, 3 * 6); // 3 vertices for each triangle -> 6 vertices total for 2 triang
 		
 		glDisableVertexAttribArray(0);
-		
+
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -362,6 +379,7 @@ int main(void)
 
 	// Cleanup VBO
 	glDeleteBuffers(1, &vbuffer);
+	glDeleteBuffers(1, &vbufferstar);
 	glDeleteVertexArrays(1, &VertexArrayID);
 	glDeleteProgram(programID);
 
