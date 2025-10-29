@@ -17,6 +17,9 @@
 #include <algorithm>
 #include <sstream>
 #include <windows.h>
+#include <time.h> //one of these
+#include <ctime>
+#include <random>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -168,15 +171,6 @@ int main(void)
 	}
 
 
-	//variables
-	float centerX = 0.0f;
-	float centerY = 0.0f;
-	const float shapeWidth = 3.0f; //from -1.5 to 1.5
-	//const float leftBoundary = -15.0f + shapeSize / 2.0f; // -13.5
-	//const float rightBoundary = 15.0f - shapeSize / 2.0f; // 13.5
-	const float leftBoundary = -12.50f;
-	const float rightBoundary = 12.50f;
-
 
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
@@ -218,6 +212,8 @@ int main(void)
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 	
+
+
 	//character A
 	GLfloat shape[] = {
 		//first triangle (top)
@@ -237,7 +233,6 @@ int main(void)
 	};
 
 
-
 	
 	GLfloat starShape[] = {
 		//base
@@ -247,14 +242,11 @@ int main(void)
 		-0.25f , -0.5f , 0.0f,
 
 		//second triangle
-		
 		0.25f , 0.0f , 0.0f,
 		0.25f , -0.5f , 0.0f ,
 		-0.25f , -0.5f , 0.0f,
-	//};
 
 
-	//GLfloat starShape[] = {
 		//rest
 		//first triangle 
 		0.0f , 1.5f , 0.0f,
@@ -278,7 +270,24 @@ int main(void)
 
 	//gotta make VBO and VA0 for star shape 
 
+    //variables
+	float centerX = 0.0f;
+    float centerY = 0.0f;
+	const float shapeWidth = 3.0f; //from -1.5 to 1.5
+	//const float leftBoundary = -15.0f + shapeSize / 2.0f; // -13.5
+	//const float rightBoundary = 15.0f - shapeSize / 2.0f; // 13.5
+	const float leftBoundary = -12.50f;
+	const float rightBoundary = 12.50f;
 
+	float starX = 0.0f;
+	float starY = 0.0f;
+	double starAppearTime = 0.0; //counter
+	const double starLifeTime = 1.5;
+	bool showStar = false; //star not on screen 
+
+	srand(static_cast<unsigned>(time(0))); //for random time values
+
+	double currentTime = glfwGetTime();
 
 
 	//VBO shape
@@ -292,6 +301,8 @@ int main(void)
 	glGenBuffers(1, &vbufferstar);
 	glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
+
+	const int starVertexCount = sizeof(starShape) / sizeof(starShape[0]) / 3;
 
 	do {
 
@@ -324,8 +335,6 @@ int main(void)
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
 
-
-
 		glGenBuffers(1, &vbufferstar);
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
@@ -345,12 +354,41 @@ int main(void)
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 3 * 6); // 3 vertices for each triangle -> 6 vertices total for 2 triang
+		//glDrawArrays(GL_TRIANGLES, 0, starVertexCount); //draw star
 		
 		glDisableVertexAttribArray(0);
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+
+		//this correct
+		if (!showStar || (currentTime - starAppearTime > starLifeTime)) { //if star is not on screen or lifetime 
+			starX = -11.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 22.0f)); //boundaries for the star 
+			starY = 5.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)); // boundaries for the star 
+			starAppearTime = currentTime;
+			showStar = true;
+
+		}
+
+
+		//chat shi idk exactly what that is
+		if (showStar && (currentTime - starAppearTime < starLifeTime)) {
+			glm::mat4 starModel = glm::translate(glm::mat4(1.0f), glm::vec3(starX, starY, 0.0f));
+			glm::mat4 starMVP = Projection * View * starModel;
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &starMVP[0][0]);
+
+			glBindVertexArray(vbufferstar);
+			glDrawArrays(GL_TRIANGLES, 0, starVertexCount);
+		}
+
+		if (showStar && (currentTime - starAppearTime >= starLifeTime)) {
+			showStar = false; //hide star
+		}
+
+		
+
 
 
 		//moving the shape with keys J and L
