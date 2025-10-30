@@ -1,6 +1,4 @@
 ﻿//********************************
-//Αυτό το αρχείο θα το χρησιμοποιήσετε
-// για να υλοποιήσετε την άσκηση 1Α της OpenGL
 //
 //ΑΜ: 5309                        Όνομα: Andreana Nikou
 //ΑΜ: 5379                        Όνομα: Theodora Ferentinou
@@ -17,8 +15,8 @@
 #include <algorithm>
 #include <sstream>
 #include <windows.h>
-#include <time.h> //one of these
-#include <ctime>
+//#include <time.h> 
+//#include <ctime>
 #include <random>
 
 // Include GLEW
@@ -178,9 +176,9 @@ int main(void)
 	// dark gray background
 	glClearColor(34.0f/255.0f,34.0f/255.0f,34.0f/255.0f, 0.0f);
 
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
+	//GLuint VertexArrayID;
+	//glGenVertexArrays(1, &VertexArrayID);
+	//glBindVertexArray(VertexArrayID);
 
 	//***********************************************
 	// Οι shaders σας είναι οι 
@@ -240,27 +238,26 @@ int main(void)
 		-0.25f , 0.0f , 0.0f,
 		0.25f , 0.0f , 0.0f ,
 		-0.25f , -0.5f , 0.0f,
-
 		//second triangle
 		0.25f , 0.0f , 0.0f,
 		0.25f , -0.5f , 0.0f ,
 		-0.25f , -0.5f , 0.0f,
 
 
-		//rest
-		//first triangle 
+		//rays
+		//top triangle 
 		0.0f , 1.5f , 0.0f,
 		-0.25f , 0.0f , 0.0f ,
 		0.25f , 0.0f , 0.0f,
-		//second triangle
+		//left triangle
 		-1.75f , -0.25f , 0.0f,
 		-0.25f , 0.0f , 0.0f ,
 		-0.25f , -0.5f , 0.0f,
-		//third triangle
+		//bottom triangle
 		-0.25f , -0.5f , 0.0f,
 		0.0f , -2.0f , 0.0f ,
 		0.25f , -0.5f , 0.0f,
-		//fourth triangle
+		//right triangle
 		0.25f , 0.0f , 0.0f,
 		0.25f , -0.5f , 0.0f ,
 		1.75f , -0.25f , 0.0f
@@ -268,11 +265,6 @@ int main(void)
 
 
 
-	//gotta make VBO and VA0 for star shape 
-
-    //variables
-	float centerX = 0.0f;
-    float centerY = 0.0f;
 	const float shapeWidth = 3.0f; //from -1.5 to 1.5
 	//const float leftBoundary = -15.0f + shapeSize / 2.0f; // -13.5
 	//const float rightBoundary = 15.0f - shapeSize / 2.0f; // 13.5
@@ -287,16 +279,14 @@ int main(void)
 
 	srand(static_cast<unsigned>(time(0))); //for random time values
 
-	//double currentTime = glfwGetTime();
 
-
-	//VBO house
+	//---VBO house---
 	GLuint vbuffer;
 	glGenBuffers(1, &vbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(HouseShape), HouseShape, GL_STATIC_DRAW);
 
-	//VBO star
+	//---VBO star---
 	GLuint vbufferstar;
 	glGenBuffers(1, &vbufferstar);
 	glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
@@ -304,7 +294,7 @@ int main(void)
 
 
 
-	// --- House VAO ---
+	//---House VAO---
 	GLuint vaoHouse;
 	glGenVertexArrays(1, &vaoHouse); //create vao
 
@@ -312,8 +302,7 @@ int main(void)
 	glGenBuffers(1, &vbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(HouseShape), HouseShape, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
 
 
 	// --- Star VAO ---
@@ -324,15 +313,16 @@ int main(void)
 	glGenBuffers(1, &vbufferstar);
 	glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	
 
 	//glBindVertexArray(0); //unbind vao (shapes disappear if uncomment)
+	
 
-	const int starVertexCount = sizeof(starShape) / sizeof(starShape[0]) / 3;
 
 	do {
+
 		double currentTime = glfwGetTime();
+
 		// Clear the screen 
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -362,41 +352,43 @@ int main(void)
 			(void*)0            // array buffer offset
 		);
 
-		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
-		//glDrawArrays(GL_TRIANGLES, 0, starVertexCount); //draw star , 18 vertices
+		// Draw the house !
+		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 9 vertices total for 3 triangles
+
 
 		glGenBuffers(1, &vbufferstar);
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 
 		glEnableVertexAttribArray(0); //enable again for star
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar); //bind
 
-		//glDisableVertexAttribArray(0);
-		//this correct
+		
 		if (!showStar || (currentTime - starAppearTime > starLifeTime)) { //if star is not on screen or lifetime 
-			//starX = -11.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 22.0f)); //boundaries for the star 
-			//starY = 5.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)); // boundaries for the star 
 			float randomPlace = static_cast<float>(rand()) / RAND_MAX;
-			starX = -11.0f + randomPlace * 22.0f;  // [-11, 11]
-			starY = 5.0f + randomPlace * 6.0f;   // [5, 11]
+			starX = -11.0f+randomPlace*22.0f;  //[-11,11]
+			starY = 5.0f+randomPlace*6.0f;   //[5,11]
 			starAppearTime = currentTime;
 			showStar = true;
 
 		}
 
-
-		//chat shi idk exactly what that is
+		
 		if (showStar && (currentTime - starAppearTime < starLifeTime)) {
-			glm::mat4 starModel = glm::translate(glm::mat4(1.0f), glm::vec3(starX, starY, 0.0f));
-			glm::mat4 starMVP = Projection * View * starModel;
-			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &starMVP[0][0]);
+			GLfloat starVertices[54];
+			memcpy(starVertices, starShape, sizeof(starShape));
 
-			glBindVertexArray(vaoStar); //vbufferstar einai vbo not vao, changes to vaoStar
-			//glDrawArrays(GL_TRIANGLES, 0, starVertexCount);
+			for (int i = 0; i < 54; i += 3) {
+				starVertices[i] += starX;
+				starVertices[i + 1] += starY;
+			}
+
+			glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(starVertices), starVertices);
+
+			glBindVertexArray(vaoStar);
+			
 		}
 
 		if (showStar && (currentTime - starAppearTime >= starLifeTime)) {
@@ -412,9 +404,8 @@ int main(void)
 			(void*)0            // array buffer offset
 		);
 
-		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 3 * 6); // 3 vertices for each triangle -> 6 vertices total for 2 triang
-		//glDrawArrays(GL_TRIANGLES, 0, starVertexCount); //draw star
+		// Draw the star !
+		glDrawArrays(GL_TRIANGLES, 0, 3 * 6); // 3 vertices for each triangle -> 18 vertices total for 2 triang
 		
 		glDisableVertexAttribArray(0);
 
@@ -424,8 +415,6 @@ int main(void)
 
 		
 
-
-		
 
 		//moving the shape with keys J and L
 		//do not get out of window ,left  and right boundary check
@@ -456,7 +445,9 @@ int main(void)
 	// Cleanup VBO
 	glDeleteBuffers(1, &vbuffer);
 	glDeleteBuffers(1, &vbufferstar);
-	glDeleteVertexArrays(1, &VertexArrayID);
+	//glDeleteVertexArrays(1, &VertexArrayID);
+	glDeleteVertexArrays(1, &vaoHouse);
+	glDeleteVertexArrays(1, &vaoStar);
 	glDeleteProgram(programID);
 
 	// Close OpenGL window and terminate GLFW
