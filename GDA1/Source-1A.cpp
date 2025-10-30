@@ -364,7 +364,7 @@ int main(void)
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
-		glDrawArrays(GL_TRIANGLES, 0, starVertexCount); //draw star , 18 vertices
+		//glDrawArrays(GL_TRIANGLES, 0, starVertexCount); //draw star , 18 vertices
 
 		glGenBuffers(1, &vbufferstar);
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
@@ -376,6 +376,32 @@ int main(void)
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar); //bind
 
 		//glDisableVertexAttribArray(0);
+		//this correct
+		if (!showStar || (currentTime - starAppearTime > starLifeTime)) { //if star is not on screen or lifetime 
+			//starX = -11.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 22.0f)); //boundaries for the star 
+			//starY = 5.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)); // boundaries for the star 
+			float randomPlace = static_cast<float>(rand()) / RAND_MAX;
+			starX = -11.0f + randomPlace * 22.0f;  // [-11, 11]
+			starY = 5.0f + randomPlace * 6.0f;   // [5, 11]
+			starAppearTime = currentTime;
+			showStar = true;
+
+		}
+
+
+		//chat shi idk exactly what that is
+		if (showStar && (currentTime - starAppearTime < starLifeTime)) {
+			glm::mat4 starModel = glm::translate(glm::mat4(1.0f), glm::vec3(starX, starY, 0.0f));
+			glm::mat4 starMVP = Projection * View * starModel;
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &starMVP[0][0]);
+
+			glBindVertexArray(vaoStar); //vbufferstar einai vbo not vao, changes to vaoStar
+			//glDrawArrays(GL_TRIANGLES, 0, starVertexCount);
+		}
+
+		if (showStar && (currentTime - starAppearTime >= starLifeTime)) {
+			showStar = false; //hide star
+		}
 
 		glVertexAttribPointer(
 			0,                  // attribute 0, must match the layout in the shader.
@@ -398,32 +424,6 @@ int main(void)
 
 		
 
-		//this correct
-		if (!showStar || (currentTime - starAppearTime > starLifeTime)) { //if star is not on screen or lifetime 
-			//starX = -11.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 22.0f)); //boundaries for the star 
-			//starY = 5.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)); // boundaries for the star 
-			float randomPlace = static_cast<float>(rand()) / RAND_MAX;
-			starX = -11.0f + randomPlace * 22.0f;  // [-11, 11]
-			starY = 5.0f + randomPlace * 6.0f;   // [5, 11]
-			starAppearTime = currentTime;
-			showStar = true;
-
-		}
-
-
-		//chat shi idk exactly what that is
-		if (showStar && (currentTime - starAppearTime < starLifeTime)) {
-			glm::mat4 starModel = glm::translate(glm::mat4(1.0f), glm::vec3(starX, starY, 0.0f));
-			glm::mat4 starMVP = Projection * View * starModel;
-			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &starMVP[0][0]);
-
-			glBindVertexArray(vaoStar); //vbufferstar einai vbo not vao, changes to vaoStar
-			glDrawArrays(GL_TRIANGLES, 0, starVertexCount);
-		}
-
-		if (showStar && (currentTime - starAppearTime >= starLifeTime)) {
-			showStar = false; //hide star
-		}
 
 		
 
