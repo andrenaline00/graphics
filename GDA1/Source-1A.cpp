@@ -215,7 +215,7 @@ int main(void)
 
 
 	//character A
-	GLfloat shape[] = {
+	GLfloat HouseShape[] = {
 		//first triangle (top)
 		-1.5f, -8.0f, 0.0f,
 		 1.5f, -8.0f, 0.0f,
@@ -287,14 +287,14 @@ int main(void)
 
 	srand(static_cast<unsigned>(time(0))); //for random time values
 
-	double currentTime = glfwGetTime();
+	//double currentTime = glfwGetTime();
 
 
-	//VBO shape
+	//VBO house
 	GLuint vbuffer;
 	glGenBuffers(1, &vbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(HouseShape), HouseShape, GL_STATIC_DRAW);
 
 	//VBO star
 	GLuint vbufferstar;
@@ -302,10 +302,37 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
 
+
+
+	// --- House VAO ---
+	GLuint vaoHouse;
+	glGenVertexArrays(1, &vaoHouse); //create vao
+
+	glBindVertexArray(vaoHouse); //shape vao
+	glGenBuffers(1, &vbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(HouseShape), HouseShape, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+
+	// --- Star VAO ---
+	GLuint vaoStar;
+	glGenVertexArrays(1, &vaoStar); //create vao
+
+	glBindVertexArray(vaoStar); //shape vao 
+	glGenBuffers(1, &vbufferstar);
+	glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	//glBindVertexArray(0); //unbind vao (shapes disappear if uncomment)
+
 	const int starVertexCount = sizeof(starShape) / sizeof(starShape[0]) / 3;
 
 	do {
-
+		double currentTime = glfwGetTime();
 		// Clear the screen 
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -313,15 +340,18 @@ int main(void)
 		glUseProgram(programID);
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);  /// Αυτό αφορά την κάμερα  - το αγνοείτε
 
+
+
+		//glBindVertexArray(vaoHouse); //bind house vao , if the upper uncommented , then this too
+
 		glGenBuffers(1, &vbuffer); 
 		glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(shape), shape, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(HouseShape), HouseShape, GL_STATIC_DRAW);
 
 		
-
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vbuffer);
-		
+
 		
 		glVertexAttribPointer(
 			0,                  // attribute 0, must match the layout in the shader.
@@ -334,12 +364,16 @@ int main(void)
 
 		// Draw the triangle !
 		glDrawArrays(GL_TRIANGLES, 0, 3*3); // 3 vertices for each triangle -> 6 vertices total for 2 triangles
+		glDrawArrays(GL_TRIANGLES, 0, starVertexCount); //draw star , 18 vertices
 
 		glGenBuffers(1, &vbufferstar);
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(starShape), starShape, GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar);
+
+		glEnableVertexAttribArray(0); //enable again for star
+		glBindBuffer(GL_ARRAY_BUFFER, vbufferstar); //bind
 
 		//glDisableVertexAttribArray(0);
 
@@ -362,11 +396,15 @@ int main(void)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
+		
 
 		//this correct
 		if (!showStar || (currentTime - starAppearTime > starLifeTime)) { //if star is not on screen or lifetime 
-			starX = -11.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 22.0f)); //boundaries for the star 
-			starY = 5.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)); // boundaries for the star 
+			//starX = -11.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 22.0f)); //boundaries for the star 
+			//starY = 5.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 6.0f)); // boundaries for the star 
+			float randomPlace = static_cast<float>(rand()) / RAND_MAX;
+			starX = -11.0f + randomPlace * 22.0f;  // [-11, 11]
+			starY = 5.0f + randomPlace * 6.0f;   // [5, 11]
 			starAppearTime = currentTime;
 			showStar = true;
 
@@ -379,7 +417,7 @@ int main(void)
 			glm::mat4 starMVP = Projection * View * starModel;
 			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &starMVP[0][0]);
 
-			glBindVertexArray(vbufferstar);
+			glBindVertexArray(vaoStar); //vbufferstar einai vbo not vao, changes to vaoStar
 			glDrawArrays(GL_TRIANGLES, 0, starVertexCount);
 		}
 
@@ -389,21 +427,19 @@ int main(void)
 
 		
 
-
-
 		//moving the shape with keys J and L
 		//do not get out of window ,left  and right boundary check
 		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-			if (shape[3] < rightBoundary && shape[6] < rightBoundary && shape[9] < rightBoundary) { // boundary check for right side
-				for (int i = 0; i < sizeof(shape) / sizeof(shape[0]); i += 3) {
-					shape[i] += 0.01f; // move x coordinate
+			if (HouseShape[3] < rightBoundary && HouseShape[6] < rightBoundary && HouseShape[9] < rightBoundary) { // boundary check for right side
+				for (int i = 0; i < sizeof(HouseShape) / sizeof(HouseShape[0]); i += 3) {
+					HouseShape[i] += 0.01f; // move x coordinate
 				}
 			}
 		}
 		else if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-			if (shape[0] > leftBoundary && shape[12] > leftBoundary && shape[15] > leftBoundary) { // boundary check for left side
-				for (int i = 0; i < sizeof(shape) / sizeof(shape[0]); i += 3) {
-					shape[i] -= 0.01f; // move x coordinate
+			if (HouseShape[0] > leftBoundary && HouseShape[12] > leftBoundary && HouseShape[15] > leftBoundary) { // boundary check for left side
+				for (int i = 0; i < sizeof(HouseShape) / sizeof(HouseShape[0]); i += 3) {
+					HouseShape[i] -= 0.01f; // move x coordinate
 				}
 			}
 		}
