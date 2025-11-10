@@ -48,7 +48,7 @@ glm::mat4 getProjectionMatrix() {
 
 void camera_function()
 {
-
+	
 }
 
 /////////////////////////////////////////////////
@@ -163,10 +163,10 @@ int main(void)
 	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); 
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	window = glfwCreateWindow(850, 850, u8"Εργασία 1Β - 2025 - Σκηνικό Παιχνιδιού", NULL, NULL);
+	window = glfwCreateWindow(800, 800, "Project 1B template", NULL, NULL);
 
 
 	if (window == NULL) {
@@ -178,7 +178,7 @@ int main(void)
 	glfwMakeContextCurrent(window);
 
 	// Initialize GLEW
-	glewExperimental = true;
+	glewExperimental = true; 
 	if (glewInit() != GLEW_OK) {
 		fprintf(stderr, "Failed to initialize GLEW\n");
 		getchar();
@@ -189,8 +189,8 @@ int main(void)
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	// background color - dark gray
-	glClearColor(34.0f / 255.0f, 34.0f / 255.0f, 34.0f / 255.0f, 0.0f);
+	// background color
+	glClearColor(0.5f, 0.5f, 0.5f, 0.0f);
 	glEnable(GL_DEPTH_TEST);
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
@@ -211,62 +211,62 @@ int main(void)
 	// Model matrix : an identity matrix (model will be at the origin)
 	glm::mat4 Model = glm::mat4(1.0f);
 	// Our ModelViewProjection : multiplication of our 3 matrices
-	glm::mat4 MVP = Projection * View * Model;
+	glm::mat4 MVP = Projection * View * Model; 
+	
+    GLfloat len = 5.0f, wid=2.5f, heig=2.5f;
 
-	GLfloat len = 5.0f, wid = 2.5f, heig = 2.5f;
-
-	static const GLfloat charA[] =
+	static const GLfloat cube[] =
 	{
-		 0.0f,-7.75f,-1.0f, //v9
-		-1.5f,-8.5f ,-2.0f, //v8
-		-1.5f,-8.5f , 0.0f, //v4
+		-2.0f,-2.0f,-2.0f,
+		-2.0f,-2.0f, 2.0f,
+		-2.0f, 2.0f, 2.0f,
 
-		 0.0f,-7.75f,-1.0f, //v9
-		-1.5f,-8.5f , 0.0f, //v4
-		 1.5f,-10.0f, 0.0f, //v3
+		 2.0f, 2.0f,-2.0f,
+		-2.0f,-2.0f,-2.0f,
+		-2.0f, 2.0f,-2.0f,
 
-		 0.0f,-7.75f,-1.0f, //v9
-		 1.5f,-10.0f, 0.0f, //v3
-		 1.5f,-8.5f ,-2.0f, //v7
+		 2.0f,-2.0f, 2.0f,
+		-2.0f,-2.0f,-2.0f,
+		 2.0f,-2.0f,-2.0f,
 
-		 0.0f,-7.75f,-1.0f, //v9
-		 1.5f,-8.5f ,-2.0f, //v7
-		-1.5f,-8.5f ,-2.0f, //v8
+		 2.0f, 2.0f,-2.0f,
+		 2.0f,-2.0f,-2.0f,
+		-2.0f,-2.0f,-2.0f,
 
-		-1.5f,-8.5f ,-2.0f, //v8
-		-1.5f,-8.5f , 0.0f, //v4
-		-1.5f,-10.0f, 0.0f, //v1
+		-2.0f,-2.0f,-2.0f,
+		-2.0f, 2.0f, 2.0f,
+		-2.0f, 2.0f,-2.0f,
 
-		-1.5f,-8.5f ,-2.0f, //v8
-		-1.5f,-10.0f, 0.0f, //v1
-		-1.5f,-10.0f,-2.0f, //v5
+		 2.0f,-2.0f, 2.0f,
+		-2.0f,-2.0f, 2.0f,
+		-2.0f,-2.0f,-2.0f,
 
-		-1.5f,-8.5f ,-2.0f, //v8
-		-1.5f,-10.0f,-2.0f, //v5
-		 1.5f,-10.0f,-2.0f, //v6
+		-2.0f, 2.0f, 2.0f,
+		-2.0f,-2.0f, 2.0f,
+		 2.0f,-2.0f, 2.0f,
 
-		-1.5f,-8.5f ,-2.0f, //v8
-		 1.5f,-8.5f ,-2.0f, //v7
-		 1.5f,-10.0f,-2.0f, //v6
+		 2.0f, 2.0f, 2.0f,
+		 2.0f,-2.0f,-2.0f,
+		 2.0f, 2.0f,-2.0f,
 
-		 1.5f,-8.5f ,-2.0f, //v7
-		 1.5f,-10.0f,-2.0f, //v6
-		 1.5f,-10.0f, 0.0f, //v2
+		 2.0f,-2.0f,-2.0f,
+		 2.0f, 2.0f, 2.0f,
+		 2.0f,-2.0f, 2.0f,
 
-		 1.5f,-8.5f ,-2.0f, //v7
-		 1.5f,-10.0f, 0.0f, //v2
-		 1.5f,-10.0f, 0.0f, //v3
+		 2.0f, 2.0f, 2.0f,
+		 2.0f, 2.0f,-2.0f,
+		-2.0f, 2.0f,-2.0f,
 
-		-1.5f,-8.5f , 0.0f, //v4
-		 1.5f,-10.0f, 0.0f, //v2
-		 1.5f,-10.0f, 0.0f, //v3
+		 2.0f, 2.0f, 2.0f,
+		-2.0f, 2.0f,-2.0f,
+		-2.0f, 2.0f, 2.0f,
 
-		-1.5f,-8.5f , 0.0f, //v4
-		 1.5f,-10.0f, 0.0f, //v2
-		-1.5f,-10.0f, 0.0f, //v1
+		 2.0f, 2.0f, 2.0f,
+		-2.0f, 2.0f, 2.0f,
+		 2.0f,-2.0f, 2.0f
 	};
 
-	GLfloat a = 0.4f;
+	GLfloat a=0.4f;
 	static const GLfloat color[] = {
 		0.583f,  0.771f,  0.014f,a,
 		0.609f,  0.115f,  0.436f,a,
@@ -304,13 +304,13 @@ int main(void)
 		0.673f,  0.211f,  0.457f,a,
 		0.820f,  0.883f,  0.371f,a,
 		0.982f,  0.099f,  0.879f,a,
-	};
+	}; 
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(charA), charA, GL_STATIC_DRAW);
-
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
+	
 	GLuint colorbuffer;
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
@@ -320,21 +320,21 @@ int main(void)
 
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
 		// Use our shader
 		glUseProgram(programID);
 
 		glm::mat4 Projection = glm::perspective(glm::radians(45.0f), 4.0f / 4.0f, 0.1f, 100.0f);
 		// Camera matrix
 		glm::mat4 View = glm::lookAt(
-			glm::vec3(5.0f, 5.0f, 5.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 0.0f, 1.0f)
+			glm::vec3(5.0f, 5.0f, 5.0f), 
+			glm::vec3(0.0f, 0.0f, 0.0f), 
+			glm::vec3(0.0f, 0.0f, 1.0f) 
 		);
-
+		
 		glm::mat4 Model = glm::mat4(1.0f);
-
-		glm::mat4 MVP = Projection * View * Model;
+		
+		glm::mat4 MVP = Projection * View * Model; 
 
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
@@ -342,37 +342,37 @@ int main(void)
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glVertexAttribPointer(
-			0,
-			3,
-			GL_FLOAT,
-			GL_FALSE,
-			0,
-			(void*)0
+			0,                  
+			3,                 
+			GL_FLOAT,           
+			GL_FALSE,           
+			0,                  
+			(void*)0            
 		);
 
 		// 2nd attribute buffer : colors
 		glEnableVertexAttribArray(1);
 		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 		glVertexAttribPointer(
-			1,
+			1,                                
 			4,                                // size
-			GL_FLOAT,
-			GL_FALSE,
-			0,
-			(void*)0
+			GL_FLOAT,                        
+			GL_FALSE,                         
+			0,                                
+			(void*)0                          
 		);
 
 		// Draw triangles 
-		glDrawArrays(GL_TRIANGLES, 0, 36); //12*3
-
+		glDrawArrays(GL_TRIANGLES, 0, 36); 
+		
 		glDisableVertexAttribArray(0);
 
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-	} // Check if the 1 key was pressed or the window was closed
-	while (glfwGetKey(window, GLFW_KEY_1) != GLFW_PRESS &&
+	} // Check if the ESC key was pressed or the window was closed
+	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 		glfwWindowShouldClose(window) == 0);
 
 	// Cleanup VBO
