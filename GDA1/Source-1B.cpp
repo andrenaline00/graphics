@@ -202,14 +202,17 @@ int main(void)
 
 	GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
-	glm::mat4 Projection = glm::perspective(glm::radians(80.0f), 4.0f / 4.0f, 0.1f, 100.0f);
+	glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 4.0f / 4.0f, 0.1f, 100.0f);
+
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(
 		glm::vec3(0.0f, -5.0f, 20.0f), // Camera in World Space
 		glm::vec3(0.0f, 0.0f, 0.0f), // and looks at the origin
 		glm::vec3(0.0f, 1.0f, 0.0f));  // Head is up 
+
 	// Model matrix : an identity matrix (model will be at the origin)
 	glm::mat4 Model = glm::mat4(1.0f);
+
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 MVP = Projection * View * Model;
 
@@ -217,6 +220,7 @@ int main(void)
 
 	static const GLfloat charA[] =
 	{
+		//pyramida , 4 triangles apo v9 pros tis 4 akres tis panw vashs
 		 0.0f,-7.75f,-1.0f, //v9
 		-1.5f,-8.5f ,-2.0f, //v8
 		-1.5f,-8.5f , 0.0f, //v4
@@ -233,6 +237,7 @@ int main(void)
 		 1.5f,-8.5f ,-2.0f, //v7
 		-1.5f,-8.5f ,-2.0f, //v8
 
+		//4 plevres
 		-1.5f,-8.5f ,-2.0f, //v8
 		-1.5f,-8.5f , 0.0f, //v4
 		-1.5f,-10.0f, 0.0f, //v1
@@ -257,6 +262,7 @@ int main(void)
 		 1.5f,-10.0f, 0.0f, //v2
 		 1.5f,-8.5f, 0.0f,  //v3
 
+		 //katw base (z=0): 2 triangles
 		-1.5f,-8.5f , 0.0f, //v4
 		 1.5f,-10.0f, 0.0f, //v2
 		 1.5f,-8.5f, 0.0f,  //v3
@@ -265,55 +271,107 @@ int main(void)
 		 1.5f,-10.0f, 0.0f, //v2
 		-1.5f,-10.0f, 0.0f, //v1
 	};
+	//12 triangles -> 36 vertices (12*3)
+
 
 	GLfloat a = 0.4f;
+	//GLfloat a = 1.0f;
 	static const GLfloat color[] = {
+		// Πυραμίδα (4 τρίγωνα)
+		1.0f, 0.75f, 0.80f, a, 1.0f, 0.75f, 0.80f, a, 1.0f, 0.75f, 0.80f, a,
+		1.0f, 1.0f, 0.0f, a, 1.0f, 1.0f, 0.0f, a, 1.0f, 1.0f, 0.0f, a,
+		0.0f, 1.0f, 0.0f, a, 0.0f, 1.0f, 0.0f, a, 0.0f, 1.0f, 0.0f, a,
+		0.5f, 0.0f, 0.5f, a, 0.5f, 0.0f, 0.5f, a, 0.5f, 0.0f, 0.5f, a,
+
+		// Πλευρές (6)
+		0.68f, 0.85f, 0.90f, a, 0.68f, 0.85f, 0.90f, a, 0.68f, 0.85f, 0.90f, a,
+		1.0f, 0.0f, 0.0f, a, 1.0f, 0.0f, 0.0f, a, 1.0f, 0.0f, 0.0f, a,
+		1.0f, 0.65f, 0.0f, a, 1.0f, 0.65f, 0.0f, a, 1.0f, 0.65f, 0.0f, a,
+		0.8f, 0.0f, 0.8f, a, 0.8f, 0.0f, 0.8f, a, 0.8f, 0.0f, 0.8f, a,
+		0.4f, 1.0f, 1.0f, a, 0.4f, 1.0f, 1.0f, a, 0.4f, 1.0f, 1.0f, a,
+		0.3f, 0.5f, 0.8f, a, 0.2f, 0.6f, 0.0f, a, 0.5f, 0.7f, 0.3f, a,
+
+		// Κάτω βάση (2)
+		0.05f, 0.96f, 0.12f, a, 0.39f, 0.62f, 0.36f, a, 0.67f, 0.21f, 0.46f, a,
+		0.82f, 0.88f, 0.37f, a, 0.98f, 0.10f, 0.88f, a, 0.98f, 0.10f, 0.88f, a
+	};
+	/*static const GLfloat color[] = {
+		//pyramid v9
 		0.255f,  0.192f,  0.203f,a, //v9 //pink
 		0.255f,  0.192f,  0.203f,a, //v8 
 		0.255f,  0.192f,  0.203f,a, //v4
+
 		0.255f,  0.255f,  0.000f,a, //v9 //yellow
 		0.255f,  0.255f,  0.000f,a, //v4
 		0.255f,  0.255f,  0.000f,a, //v3
+
 		0.000f,  0.255f,  0.000f,a, //v9 //green
 		0.000f,  0.255f,  0.000f,a, //v3
 		0.000f,  0.255f,  0.000f,a, //v7
+
 		0.128f,  0.000f,  0.128f,a, //v9 //purple
 		0.128f,  0.000f,  0.128f,a, //v7
 		0.128f,  0.000f,  0.128f,a, //v8
+
+		//4 plevres
 		0.173f,  0.216f,  0.230f,a, //v8 //light blue
 		0.173f,  0.216f,  0.230f,a, //v4
 		0.173f,  0.216f,  0.230f,a, //v1
-		0.971f,  0.572f,  0.833f,a, //v8
-		0.140f,  0.616f,  0.489f,a, //v1
-		0.997f,  0.513f,  0.064f,a, //v5
-		0.945f,  0.719f,  0.592f,a, //v8
-		0.543f,  0.021f,  0.978f,a, //v5
-		0.279f,  0.317f,  0.505f,a, //v6
-		0.167f,  0.620f,  0.077f,a, //v8
-		0.347f,  0.857f,  0.137f,a, //v7
-		0.055f,  0.953f,  0.042f,a, //v6
-		0.714f,  0.505f,  0.345f,a, //v7
-		0.783f,  0.290f,  0.734f,a, //v6
-		0.722f,  0.645f,  0.174f,a, //v2
+
+		1.0f, 0.0f, 0.0f, a, //v8 //red
+		1.0f, 0.0f, 0.0f, a, //v1
+		1.0f, 0.0f, 0.0f, a, //v5
+		
+
+		0.255f,  0.165f,  0.000f,a, //v8 //orange
+		0.255f,  0.165f,  0.000f,a, //v5
+		0.255f,  0.165f,  0.000f,a, //v6
+
+		0.204f,  0.000f,  0.204f,a, //v8 //a kind of purple
+		0.204f,  0.000f,  0.204f,a, //v7
+		0.204f,  0.000f,  0.204f,a, //v6
+
+		0.102f,  0.255f,  0.255f,a, //v7 //galazoprasino
+		0.102f,  0.255f,  0.255f,a, //v6
+		0.102f,  0.255f,  0.255f,a, //v2
+
 		0.302f,  0.455f,  0.848f,a, //v7
 		0.225f,  0.587f,  0.040f,a, //v2
 		0.517f,  0.713f,  0.338f,a, //v3
+
+		//katw base , 2 triangles ,z=0
 		0.053f,  0.959f,  0.120f,a, //v4
 		0.393f,  0.621f,  0.362f,a, //v2
 		0.673f,  0.211f,  0.457f,a, //v3
-		0.820f,  0.883f,  0.371f,a, //v
-		0.982f,  0.099f,  0.879f,a, //v
-	};
 
-	GLuint vertexbuffer;
+		0.820f,  0.883f,  0.371f,a, //v4
+		0.982f,  0.099f,  0.879f,a, //v2
+									//v1
+	};*/
+
+	//charA movement variables
+	float charA_x = 0.0f; //charA position on x axis
+	const float STEP = 1.5f; //a/2
+
+	//camera variables
+	float cam_rotX = 0.0f; //camera rotation on x axis
+	float cam_rotY = 0.0f; //camera rotation on y axis
+	const float ROT_SPEED= 2.0f; //rotation speed endikteiko
+	const float ZOOM_SPEED = 1.0f; //zoom speed endikteiko
+	float cam_distance = 20.0f; //camera distance from origin
+
+
+	GLuint vertexbuffer; //vbo charA
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(charA), charA, GL_STATIC_DRAW);
 
-	GLuint colorbuffer;
+	GLuint colorbuffer; //colorVBO
 	glGenBuffers(1, &colorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(color), color, GL_STATIC_DRAW);
+
+
 
 	do {
 
@@ -323,12 +381,22 @@ int main(void)
 		// Use our shader
 		glUseProgram(programID);
 
-		glm::mat4 Projection = glm::perspective(glm::radians(80.0f), 4.0f / 4.0f, 0.1f, 100.0f);
-		// Camera matrix
+		/*
+		float rx = glm::radians(cam_rotX);
+		float ry = glm::radians(cam_rotY);
+		glm::vec3 cam_pos(
+			cam_distance * cos(ry)* (rx),
+			cam_distance*sin(rx),
+			cam_distance*sin(ry) * cos(rx)
+		);*/
+
+
+		glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 4.0f / 4.0f, 0.1f, 100.0f);
+		//Camera matrix
 		glm::mat4 View = glm::lookAt(
-			glm::vec3(0.0f, -5.0f, 20.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f)
+			glm::vec3(0.0f, -5.0f, 20.0f), // Camera in World Space
+			glm::vec3(0.0f, 0.0f, 0.0f), // and looks at the origin
+			glm::vec3(0.0f, 1.0f, 0.0f) // Head is up
 		);
 
 		glm::mat4 Model = glm::mat4(1.0f);
@@ -370,7 +438,52 @@ int main(void)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-	} // Check if the 1 key was pressed or the window was closed
+		//moving charA with keys J and L
+		//maybe gotta make a model matrix
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
+				charA_x += STEP; // move x coordinate
+		}
+		else if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
+				charA_x -= STEP; // move x coordinate
+		}
+
+		cam_rotX = glm::clamp(cam_rotX, -89.0f, 89.0f); //limit camera rotation
+		//camera for rotation  (x axis)
+		//for w key
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+			cam_rotX -= ROT_SPEED;
+
+		}
+		//for x key
+		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+			cam_rotX += ROT_SPEED;
+		}
+
+		//camera rotation (y axis)
+		//for q key
+		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+			cam_rotY -= ROT_SPEED;
+		}
+		//for z key
+		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
+			cam_rotY += ROT_SPEED;
+		}
+
+		if (cam_distance < 5.0f) cam_distance = 5.0f; //stay 5 steps away 
+		//camera zoom in ++
+		if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
+			cam_distance += ZOOM_SPEED;
+		}
+		//zoom out --
+		if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
+			cam_distance -= ZOOM_SPEED;
+		}
+
+	
+
+
+	} 
+	// Check if the 1 key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_1) != GLFW_PRESS &&
 		glfwWindowShouldClose(window) == 0);
 
