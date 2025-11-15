@@ -234,9 +234,9 @@ int main(void)
 	float charA_x = 0.0f; //position on x axis
 	//float charA_y = -5.0f; //position on y axis
 
-
-
-
+	static double lastTime = glfwGetTime();
+	double currentTime;
+	float deltaTime;
 
 
 	GLfloat len = 5.0f, wid = 2.5f, heig = 2.5f;
@@ -507,6 +507,10 @@ int main(void)
 
 	do {
 
+		currentTime = glfwGetTime();
+		deltaTime = float(currentTime - lastTime);
+		lastTime = currentTime;
+
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -515,8 +519,8 @@ int main(void)
 
 
 		//move character A left/right
-		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) charA_x -= STEP;
-		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) charA_x += STEP;
+		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) charA_x -= STEP * deltaTime;
+		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) charA_x += STEP * deltaTime;
 
 		//rotation up on x axis 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -664,6 +668,8 @@ int main(void)
 		// Swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+
+		//lastTime = currentTime;
 
 
 
