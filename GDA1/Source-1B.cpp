@@ -42,13 +42,24 @@ glm::mat4 getProjectionMatrix() {
 	return ProjectionMatrix;
 }
 
-////////////////////////////////////////////// <summary>
-/// Add camera function here
-/// </summary>
+glm::mat4 camera_function(float rotX, float rotY, float distance) {
+	glm::vec3 cam_pos;
 
-void camera_function()
-{
-
+	//camera position calculation
+	if (rotX == 0.0f && rotY == 0.0f) {
+		cam_pos = glm::vec3(0.0f, -5.0f, 20.0f);
+	}
+	else {
+		float rx = glm::radians(rotX);
+		float ry = glm::radians(rotY);
+		cam_pos = glm::vec3(
+			distance * cos(ry) * cos(rx),
+			distance * sin(rx),
+			distance * sin(ry) * cos(rx)
+		);
+	}
+	//camera matrix
+	return glm::lookAt(cam_pos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 /////////////////////////////////////////////////
@@ -550,7 +561,7 @@ int main(void)
 		//limit distance so we dont get too close
 		distance = glm::max(0.5f, distance);
 
-
+		/*
 		//calculate camera position
 		float rx = glm::radians(rotX); //gwnia panw katw  (w/z)
 		float ry = glm::radians(rotY); //gwnia aristera deksia  (q/x)
@@ -566,8 +577,11 @@ int main(void)
 			//glm::vec3(0.0f, -5.0f, 20.0f),
 			glm::vec3(0.0f, 0.0f, 0.0f),
 			glm::vec3(0.0f, 1.0f, 0.0f)
-		);
+		);*/
+		//camera matrix using camera function
+		glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
 
+		glm::mat4 View = camera_function(rotX, rotY, distance);
 
 		// Model matrix CHAR A
 		glm::mat4 ModelA = glm::translate(glm::mat4(1.0f), glm::vec3(charA_x, 0.0f, 0.0f));
