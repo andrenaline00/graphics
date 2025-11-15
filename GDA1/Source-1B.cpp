@@ -28,9 +28,7 @@ GLFWwindow* window;
 using namespace glm;
 using namespace std;
 
-/// <summary>
-/// //////////////////////////////////////////////
-/// </summary>
+
 glm::mat4 ViewMatrix;
 glm::mat4 ProjectionMatrix;
 
@@ -50,19 +48,18 @@ glm::mat4 camera_function(float rotX, float rotY, float distance) {
 		cam_pos = glm::vec3(0.0f, -5.0f, 20.0f);
 	}
 	else {
-		float rx = glm::radians(rotX);
-		float ry = glm::radians(rotY);
+		float rx = glm::radians(rotX); //gwnia panw deksia (w/z)
+		float ry = glm::radians(rotY); //gwnia aristera deksia (q/x)
 		cam_pos = glm::vec3(
-			distance * cos(ry) * cos(rx),
-			distance * sin(rx),
-			distance * sin(ry) * cos(rx)
+			distance * cos(ry) * cos(rx), //X
+			distance * sin(rx), //Y
+			distance * sin(ry) * cos(rx) //Z
 		);
 	}
-	//camera matrix
+	//camera matrix , camera in the world space , look at the origin, head is up
 	return glm::lookAt(cam_pos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
-/////////////////////////////////////////////////
 
 GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path) {
 
@@ -158,7 +155,7 @@ GLuint LoadShaders(const char* vertex_file_path, const char* fragment_file_path)
 
 	return ProgramID;
 }
-///////////////////////////////////////////////////
+
 
 
 
@@ -203,7 +200,7 @@ int main(void)
 	// background color - dark gray
 	glClearColor(34.0f / 255.0f, 34.0f / 255.0f, 34.0f / 255.0f, 0.0f);
 
-	const size_t CUBE_COLOR_SIZE = 36 * 4; // 36 κορυφές * 4 components (RGBA)
+	const size_t CUBE_COLOR_SIZE = 36 * 4; //36 vertices * 4 components (RGBA)
 	GLfloat cubecolor[CUBE_COLOR_SIZE];
 
 	glEnable(GL_DEPTH_TEST);
@@ -230,10 +227,7 @@ int main(void)
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 MVP = Projection * View * Model;
 
-	//added these
-	glm::vec3 cameraPos = glm::vec3(0.0f, -5.0f, 20.0f);
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
 
 	//camera
 	float rotX = 0.0f; //rotation around x axis
@@ -243,12 +237,10 @@ int main(void)
 	//charA variables
 	const float STEP = 1.5f;
 	float charA_x = 0.0f; //position on x axis
-	//float charA_y = -5.0f; //position on y axis
 
 	static double lastTime = glfwGetTime();
 	double currentTime;
 	float deltaTime;
-
 
 	GLfloat len = 5.0f, wid = 2.5f, heig = 2.5f;
 
@@ -319,7 +311,7 @@ int main(void)
 
 	static const GLfloat charA[] =
 	{
-		//4 triangles apo v9 pros 4 akres panw vasis
+		//pyramid -> 4 triangles apo v9
 		 0.0f,-7.75f,-1.0f, //v9
 		-1.5f,-8.5f ,-2.0f, //v8
 		-1.5f,-8.5f , 0.0f, //v4
@@ -336,6 +328,7 @@ int main(void)
 		 1.5f,-8.5f ,-2.0f, //v7
 		-1.5f,-8.5f ,-2.0f, //v8
 
+		//aristeri plevra (2 triangles)
 		-1.5f,-8.5f ,-2.0f, //v8
 		-1.5f,-8.5f , 0.0f, //v4
 		-1.5f,-10.0f, 0.0f, //v1
@@ -344,6 +337,7 @@ int main(void)
 		-1.5f,-10.0f, 0.0f, //v1
 		-1.5f,-10.0f,-2.0f, //v5
 
+		//pisw plevra (2 triangles)
 		-1.5f,-8.5f ,-2.0f, //v8
 		-1.5f,-10.0f,-2.0f, //v5
 		 1.5f,-10.0f,-2.0f, //v6
@@ -352,6 +346,7 @@ int main(void)
 		 1.5f,-8.5f ,-2.0f, //v7
 		 1.5f,-10.0f,-2.0f, //v6
 
+		 //deksia plevra (2 triangles)
 		 1.5f,-8.5f ,-2.0f, //v7
 		 1.5f,-10.0f,-2.0f, //v6
 		 1.5f,-10.0f, 0.0f, //v2
@@ -360,6 +355,7 @@ int main(void)
 		 1.5f,-10.0f, 0.0f, //v2
 		 1.5f,-8.5f, 0.0f,  //v3
 
+		 //mprosta plevra (2 triangles)
 		-1.5f,-8.5f , 0.0f, //v4
 		 1.5f,-10.0f, 0.0f, //v2
 		 1.5f,-8.5f, 0.0f,  //v3
@@ -367,12 +363,20 @@ int main(void)
 		-1.5f,-8.5f , 0.0f, //v4
 		 1.5f,-10.0f, 0.0f, //v2
 		-1.5f,-10.0f, 0.0f, //v1
+
+		//bottom 2 triangles
+		-1.5f,-10.0f,-2.0f, //v5
+		-1.5f,-10.0f, 0.0f, //v1
+		 1.5f,-10.0f,-2.0f, //v6
+
+		-1.5f,-10.0f, 0.0f, //v1
+		 1.5f,-10.0f,-2.0f, //v6
+		 1.5f,-10.0f, 0.0f, //v2
 	};
 
 
+	GLfloat a = 0.4f; //global alpha value for transparency
 
-
-	GLfloat a = 0.4f;
 	static const GLfloat charColor[] = {
 		1.0f, 0.0f, 0.0f, a, //red  //v9 
 		1.0f, 0.0f, 0.0f, a,  //v8 
@@ -423,70 +427,23 @@ int main(void)
 		1.0f, 0.4f, 0.7f, a,   //v1
 		1.0f, 0.4f, 0.7f, a,   //v2
 
-		0.6f, 0.4f, 0.8f, a,   //v4
-		0.6f, 0.4f, 0.8f, a,   //v1
-		0.6f, 0.4f, 0.8f, a    //v2
+		0.5f, 0.0f, 0.0f,a,   //v5 //dark red
+		0.5f, 0.0f, 0.0f,a,   //v1
+		0.5f, 0.0f, 0.0f,a,   //v6
+
+		0.5f, 0.0f, 0.0f,a,   //v1
+		0.5f, 0.0f, 0.0f,a,   //v6
+		0.5f, 0.0f, 0.0f,a,   //v2
 
 	};
 
-	/*
-	static const GLfloat cubecolor[] = {
-		1.0f, 1.0f, 0.0f, a,  // κίτρινο
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
 
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,  // κίτρινο
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,  // κίτρινο
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a
-
-	};*/
-
-
+	//color cubes
 	for (size_t i = 0; i < CUBE_COLOR_SIZE; i += 4) {
 		cubecolor[i] = 1.0f;     // R
 		cubecolor[i + 1] = 1.0f;   // G
 		cubecolor[i + 2] = 0.0f;   // B
-		cubecolor[i + 3] = a;      // A (χρησιμοποιεί τη global a = 0.4f)
+		cubecolor[i + 3] = a;      // a
 	}
 
 	//character A VBO
@@ -508,7 +465,6 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
 
 	//VBO cube colors
-
 	GLuint cubecolorbuffer;
 	glGenBuffers(1, &cubecolorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, cubecolorbuffer);
@@ -533,55 +489,40 @@ int main(void)
 		if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) charA_x -= STEP * deltaTime;
 		if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) charA_x += STEP * deltaTime;
 
-		//rotation up on x axis 
+		//rotation on x axis 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			rotX += 0.5f; //random to 2;
+			rotX += 0.5f; 
 		}
-		//rotation down on x axis
+		//rotation on x axis
 		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-			rotX -= 0.5f; //random to 2;
+			rotX -= 0.5f; 
 		}
 
-		//rotation down y axis
+		//rotation y axis
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-			rotY -= 0.5f; //random to 2;
+			rotY -= 0.5f; 
 		}
-		//rotation up y axis
+		//rotation y axis
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-			rotY += 0.5f; //random to 2;
+			rotY += 0.5f; 
 		}
 		//zoom in
 		if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
-			distance -= 0.2f; //random to 0.5f
+			distance -= 0.2f; 
 		}
 		//zoom out
 		if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
-			distance += 0.2f; //random to 0.5f
+			distance += 0.2f; 
 		}
+
 		//limit distance so we dont get too close
 		distance = glm::max(0.5f, distance);
 
-		/*
-		//calculate camera position
-		float rx = glm::radians(rotX); //gwnia panw katw  (w/z)
-		float ry = glm::radians(rotY); //gwnia aristera deksia  (q/x)
-		glm::vec3 cam_pos(
-			distance * cos(ry) * cos(rx), //X
-			distance * sin(rx), //Y
-			distance * sin(ry) * cos(rx)//Z
-		);
 
-		// Camera matrix
-		glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
-		glm::mat4 View = glm::lookAt(cam_pos,
-			//glm::vec3(0.0f, -5.0f, 20.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);*/
 		//camera matrix using camera function
 		glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 1.0f, 0.1f, 100.0f);
-
 		glm::mat4 View = camera_function(rotX, rotY, distance);
+
 
 		// Model matrix CHAR A
 		glm::mat4 ModelA = glm::translate(glm::mat4(1.0f), glm::vec3(charA_x, 0.0f, 0.0f));
@@ -589,21 +530,6 @@ int main(void)
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP_A[0][0]);
 
 
-		//glm::mat4 rotXMat = glm::rotate(glm::mat4(1.0f), glm::radians(rotX), glm::vec3(1.0f, 0.0f, 0.0f));
-		//glm::mat4 Projection = glm::perspective(glm::radians(60.0f), 4.0f / 4.0f, 0.1f, 100.0f);
-		// Camera matrix
-		/*glm::mat4 View = glm::lookAt(
-			glm::vec3(0.0f, -5.0f, 20.0f),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);*/
-
-
-		//glm::mat4 Model = glm::mat4(1.0f);
-
-		//glm::mat4 MVP = Projection * View * Model;
-
-		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
@@ -629,8 +555,8 @@ int main(void)
 			(void*)0
 		);
 
-		// Draw triangles 
-		glDrawArrays(GL_TRIANGLES, 0, 36); //12*3
+		//Draw triangles 
+		glDrawArrays(GL_TRIANGLES, 0, 42); //10*3 (orthogwnio) + 4*3 (pyramid)
 
 		// 1st attribute buffer : cube
 		glEnableVertexAttribArray(0);
@@ -656,17 +582,15 @@ int main(void)
 			(void*)0
 		);
 
-
-		// Draw triangles 
-		//glDrawArrays(GL_TRIANGLES, 0, 36); //12*3
+	
 		for (int i = 0; i < 5; ++i) {
 			float current_X_offset = (float)i * 4;
 
-			//metatopish ston aksona x
+			//metatopish ston x axis 
 			glm::mat4 TranslationMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(current_X_offset, 0.0f, 0.0f));
 			glm::mat4 Model_Cube = TranslationMatrix;
 
-			//ypologizoyme to mvp kai to leme ston shader?
+			//ypologizoyme to mvp 
 			glm::mat4 MVP_Cube = Projection * View * Model_Cube;
 			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP_Cube[0][0]);
 
@@ -683,9 +607,7 @@ int main(void)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 
-		//lastTime = currentTime;
-
-
+		
 
 	} // Check if the 1 key was pressed or the window was closed
 	while (glfwGetKey(window, GLFW_KEY_1) != GLFW_PRESS &&
