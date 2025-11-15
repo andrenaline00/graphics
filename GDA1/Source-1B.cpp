@@ -191,7 +191,12 @@ int main(void)
 
 	// background color - dark gray
 	glClearColor(34.0f / 255.0f, 34.0f / 255.0f, 34.0f / 255.0f, 0.0f);
+
+	const size_t CUBE_COLOR_SIZE = 36 * 4; // 36 κορυφές * 4 components (RGBA)
+	GLfloat cubecolor[CUBE_COLOR_SIZE];
+
 	glEnable(GL_DEPTH_TEST);
+
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
@@ -227,9 +232,9 @@ int main(void)
 	//charA variables
 	const float STEP = 1.5f;
 	float charA_x = 0.0f; //position on x axis
-	float charA_y = -5.0f; //position on y axis
+	//float charA_y = -5.0f; //position on y axis
 
-	
+
 
 
 
@@ -398,7 +403,7 @@ int main(void)
 		0.0f,0.0f,0.205f,a, //medium blue //v7
 		0.0f,0.0f,0.205f,a,  //v2
 		0.0f,0.0f,0.205f,a,  //v3
-		
+
 		1.0f, 0.4f, 0.7f, a,   //v4 //pink
 		1.0f, 0.4f, 0.7f, a,   //v2
 		1.0f, 0.4f, 0.7f, a,   //v3
@@ -413,11 +418,12 @@ int main(void)
 
 	};
 
-	
+	/*
 	static const GLfloat cubecolor[] = {
 		1.0f, 1.0f, 0.0f, a,  // κίτρινο
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
+
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
@@ -425,20 +431,7 @@ int main(void)
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
 
-		1.0f, 1.0f, 0.0f, a,  // κίτρινο
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
-		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
@@ -446,6 +439,7 @@ int main(void)
 		1.0f, 1.0f, 0.0f, a,  // κίτρινο
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
+
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
@@ -453,12 +447,36 @@ int main(void)
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
+
+		1.0f, 1.0f, 0.0f, a,
+		1.0f, 1.0f, 0.0f, a,
+		1.0f, 1.0f, 0.0f, a,
+
+		1.0f, 1.0f, 0.0f, a,  // κίτρινο
+		1.0f, 1.0f, 0.0f, a,
+		1.0f, 1.0f, 0.0f, a,
+
+		1.0f, 1.0f, 0.0f, a,
+		1.0f, 1.0f, 0.0f, a,
+		1.0f, 1.0f, 0.0f, a,
+
+		1.0f, 1.0f, 0.0f, a,
+		1.0f, 1.0f, 0.0f, a,
+		1.0f, 1.0f, 0.0f, a,
+
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a,
 		1.0f, 1.0f, 0.0f, a
 
-	};  
-	
+	};*/
+
+
+	for (size_t i = 0; i < CUBE_COLOR_SIZE; i += 4) {
+		cubecolor[i] = 1.0f;     // R
+		cubecolor[i + 1] = 1.0f;   // G
+		cubecolor[i + 2] = 0.0f;   // B
+		cubecolor[i + 3] = a;      // A (χρησιμοποιεί τη global a = 0.4f)
+	}
 
 	//character A VBO
 	GLuint vertexbuffer;
@@ -479,7 +497,7 @@ int main(void)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cube), cube, GL_STATIC_DRAW);
 
 	//VBO cube colors
-	
+
 	GLuint cubecolorbuffer;
 	glGenBuffers(1, &cubecolorbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, cubecolorbuffer);
@@ -502,20 +520,20 @@ int main(void)
 
 		//rotation up on x axis 
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			rotX += 2.0f; //random to 2;
+			rotX += 0.5f; //random to 2;
 		}
 		//rotation down on x axis
 		if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-			rotX -= 2.0f; //random to 2;
+			rotX -= 0.5f; //random to 2;
 		}
 
 		//rotation down y axis
 		if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-			rotY -= 2.0f; //random to 2;
+			rotY -= 0.5f; //random to 2;
 		}
 		//rotation up y axis
 		if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-			rotY += 2.0f; //random to 2;
+			rotY += 0.5f; //random to 2;
 		}
 		//zoom in
 		if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
@@ -533,9 +551,9 @@ int main(void)
 		float rx = glm::radians(rotX); //gwnia panw katw  (w/z)
 		float ry = glm::radians(rotY); //gwnia aristera deksia  (q/x)
 		glm::vec3 cam_pos(
-			distance* cos(ry)* cos(rx), //X
-			distance* sin(rx), //Y
-			distance* sin(ry)* cos(rx)//Z
+			distance * cos(ry) * cos(rx), //X
+			distance * sin(rx), //Y
+			distance * sin(ry) * cos(rx)//Z
 		);
 
 		// Camera matrix
@@ -566,7 +584,7 @@ int main(void)
 		//glm::mat4 Model = glm::mat4(1.0f);
 
 		//glm::mat4 MVP = Projection * View * Model;
-		
+
 		//glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 		// 1rst attribute buffer : vertices
@@ -638,14 +656,6 @@ int main(void)
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
-		
-		/*
-		glm::mat4 ProjectionMatrix = getProjectionMatrix();
-		glm::mat4 ViewMatrix = getViewMatrix();
-		glm::mat4 ModelMatrix = glm::mat4(1.0);
-		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
-		*/
-		
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
